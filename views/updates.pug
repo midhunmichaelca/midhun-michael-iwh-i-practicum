@@ -1,0 +1,11 @@
+html
+  head
+    title Update Custom Object - Integrating With HubSpot I Practicum
+  body
+    h1= pageTitle
+    form(action="/update-cobj" method="post")
+      label(for="name") Name:
+      input(type="text" id="name" name="name")
+      // Add more input fields for other custom properties
+      button(type="submit") Submit
+    a(href="/") Return to Homepage
