@@ -1,9 +1,12 @@
+require('dotenv').config(); // Load environment variables
+
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const privateAppToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN; // Access private app token
 
 app.set('view engine', 'pug');
 app.use(express.static('public'));
@@ -12,9 +15,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Homepage route
 app.get('/', async (req, res) => {
     try {
-        // Make a GET request to retrieve CRM record data from HubSpot API endpoint
-        const response = await axios.get('<HubSpot API endpoint>');
-        const customObjects = response.data; // Assuming response.data contains CRM record data
+        const response = await axios.get('https://api.hubapi.com/crm/v3/objects/contacts', {
+            headers: {
+                'Authorization': `Bearer ${privateAppToken}` // Include private app token in request headers
+            }
+        });
+        const customObjects = response.data;
 
         res.render('homepage', { customObjects });
     } catch (error) {
@@ -31,7 +37,6 @@ app.get('/update-cobj', (req, res) => {
 // Route to handle form submission
 app.post('/update-cobj', async (req, res) => {
     try {
-        // Logic to handle form submission
         const formData = req.body;
         // Make a POST request to the HubSpot API to create a new CRM record using formData
         // Example: await axios.post('<HubSpot API endpoint>', formData);
