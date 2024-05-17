@@ -8,9 +8,29 @@ html
   body
     h1= pageTitle
     .form-wrapper
-      form(action="/update-cobj" method="post")
+      form(id="updateForm")
         label(for="name") Name:
         input(type="text" id="name" name="name")
-        //- Add more input fields for other custom properties
-        button(type="submit") Submit
+        label(for="email") Email:
+        input(type="email" id="email" name="email")
+        label(for="contactNumber") Contact Number:
+        input(type="tel" id="contactNumber" name="contactNumber")
+        //- Add more input fields for other data
+        button(type="button" onclick="submitFormAsJson()") Submit
     a(href="/") Return to Homepage
+
+script.
+  function submitFormAsJson() {
+    var form = document.getElementById('updateForm');
+    var formData = new FormData(form);
+    var jsonObject = {};
+    formData.forEach(function(value, key){
+      jsonObject[key] = value;
+    });
+    var jsonData = JSON.stringify(jsonObject);
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/update-cobj");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(jsonData);
+  }

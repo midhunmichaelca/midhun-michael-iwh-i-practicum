@@ -3,6 +3,7 @@ require('dotenv').config(); // Load environment variables
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const createOrUpdateHubspotRecord = require('./hubspot');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +12,7 @@ const privateAppToken = process.env.HUBSPOT_PRIVATE_APP_TOKEN; // Access private
 app.set('view engine', 'pug');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // Add JSON body parser middleware
 
 // Homepage route
 app.get('/', async (req, res) => {
@@ -37,11 +39,14 @@ app.get('/update-cobj', (req, res) => {
 // Route to handle form submission
 app.post('/update-cobj', async (req, res) => {
     try {
-        const formData = req.body;
-        // Make a POST request to the HubSpot API to create a new CRM record using formData
-        // Example: await axios.post('<HubSpot API endpoint>', formData);
+        const { name, email, contactNumber } = req.body;
 
-        // After CRM record is created, redirect back to homepage or display success message
+        // Call function to create/update HubSpot record
+        const result = await createOrUpdateHubspotRecord(email, name, contactNumber, privateAppToken);
+
+        console.log(result); // Log the response from HubSpot API
+
+        // After CRM contact record is created, redirect back to homepage or display success message
         res.redirect('/');
     } catch (error) {
         console.error(error);

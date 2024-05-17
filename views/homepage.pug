@@ -1,6 +1,10 @@
+//- homepage.pug
+doctype html
 html
   head
-    title Homepage - Integrating With HubSpot I Practicum
+    title Homepage - Integrating With HubSpot | Practicum
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="/css/styles.css")
   body
     h1 CRM Records
     table
@@ -8,11 +12,11 @@ html
         tr
           th Name
           th Bio
-          // Add more table headers for other custom properties
+          //- Add more table headers for other custom properties
       tbody
-        each customObject in customObjects
+        each customObject in customObjects.results
           tr
-            td= customObject.name
-            td= customObject.bio
-            // Add more table cells for other custom properties
+            td= customObject.properties.name
+            td= customObject.properties.bio
+            //- Add more table cells for other custom properties
     a(href="/update-cobj") Add New Record
